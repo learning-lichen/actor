@@ -36,5 +36,11 @@ module Actor
       @pause_queue.clear
       @timer_thread.wakeup
     end
+
+    ##
+    # Block the current thread until the timer has finished executing
+    def wait
+      @timer_thread.join
+    end
   end
 end
