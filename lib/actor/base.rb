@@ -6,7 +6,12 @@ module Actor
   # Module that actors should include
   module Base
     ##
-    # Adds a new message to the queue
+    # Adds a new message to the queue. Args and block are optional
+    #
+    # * *Args*:
+    #   - +method_name+: symbol representation of the action (method) to preform
+    #   - +args+: the arguments to pass to the action when it is executed
+    #   - +block+: the block to pass to the action when it is executed
     def send method_name, *args, &block
       @mailbox << [method_name, args, block]
     end
@@ -30,6 +35,7 @@ module Actor
     # * *Args*:
     #   - +action+: the action the hook into
     #   - +block+: the block to execute after the specified action
+    # * *Yields*: the value returned by the action
     def after_action action, &block
       @audience[:after][action] ||= Set.new
       @audience[:after][action] << block
@@ -43,13 +49,13 @@ module Actor
     #   - +klass+: the class whose initialization is hooked into.
     def self.included klass
       class << klass
-        alias_method :__new, :new
+        alias_method :__actor_new, :new
         
         ##
         # Hooks into the initialization of the object to initialize the
         # mailbox. Also starts the thread executing async method calls
         def new *args
-          instance = __new *args
+          instance = __actor_new *args
           instance.instance_variable_set :@audience, {}
           instance.instance_variable_set :@mailbox, Queue.new
             
@@ -67,10 +73,10 @@ module Actor
                 audience[:before][method_name].each { |callback| callback.call }
               end
 
-              instance.method(method_name).call *args, &block
+              result = instance.method(method_name).call *args, &block
               
               if audience[:after][method_name]
-                audience[:after][method_name].each { |callback| callback.call }
+                audience[:after][method_name].each { |callback| callback.yield result }
               end
             end
           end

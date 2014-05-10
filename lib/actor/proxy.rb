@@ -26,19 +26,19 @@ module Actor
     end
 
     ##
-    # Override
+    # Overrides the proxy equals to pass the equality check to the proxy target
     def == other
       @proxy_target == other
     end
 
     ##
-    # Override
+    # Overrides the proxy equals to pass the equality check to the proxy target
     def != other
       @proxy_target != other
     end
 
     ##
-    # Override
+    # Overrides the proxy equals to pass the equality check to the proxy target
     def equal? other
       @proxy_target.equal? other
     end

@@ -64,15 +64,19 @@ describe Actor::Base do
       actor.before_method
     end
 
-    proxy.after_action :action do
+    ret_value = nil
+    proxy.after_action :action do |result|
+      ret_value = result
       actor.after_method
     end
     
     actor.should_receive(:before_method).ordered
-    actor.should_receive(:action).ordered
+    actor.should_receive(:action).ordered.and_return('ret_value')
     actor.should_receive(:after_method).ordered
   
     proxy.action
     sleep 0.1
+
+    expect(ret_value).to eq 'ret_value'
   end
 end

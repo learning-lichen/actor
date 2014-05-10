@@ -3,13 +3,13 @@ module Actor
   # Simple timer implementation
   class Timer
     ##
-    # Create a new timer that fires every <period> milliseconds. The number of
+    # Create a new timer that fires every <period> seconds. The number of
     # iterations specifies how many times the timer should fire.
     #
     # * *Args*:
     #   - +period+: the time, in seconds, between firing the timer.
     #   - +iterations+: the number times the timer should fire. 0 iterations
-    # means fire continuously
+    # means fire infinitely
     def initialize period, iterations, &block
       @pause_queue = Queue.new
 

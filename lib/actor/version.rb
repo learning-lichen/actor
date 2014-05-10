@@ -1,3 +1,5 @@
 module Actor
-  VERSION = "0.0.1"
+  ##
+  # Version number (semantic versioning)
+  VERSION = "0.1.0"
 end
