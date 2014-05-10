@@ -84,7 +84,7 @@ Passing in `0` as the number of iterations to the timer causes it to execute ind
 Unfortunately, there are a few "gotchas" when using this gem.
 
 1. `Actor::Base` overrides the including class's `:new` method and renames it to `:__actor_new`. This sets up the possibility of naming conflicts.
-2. When creating a new actor, the actual instance is wrapped in a proxy class.  This proxy forwards all methods to the instance to be executed in a concurrent way. This means it is impossible to execute code non-concurrently when handling the proxy. You can access the underlying instance by calling `:__proxy_target`  on the proxy. Note: No callbacks when access the instance directly (unless you use send).
+2. When creating a new actor, the actual instance is wrapped in a proxy class.  This proxy forwards all methods to the instance to be executed in a concurrent way. This means it is impossible to execute code non-concurrently when handling the proxy. You can access the underlying instance by calling `__proxy_target`  on the proxy. Note: No callbacks when accessing the instance directly (unless you use send).
 3. The actor has an overriden send method. This means that using `:send` will always execute code concurrently, no matter what, and will also trigger callbacks.
 4. The timer period is counted from the end of the last block to the start of the next block. This means that the timer firing is very approximate and definitely not designed for blocking code.
 
@@ -93,6 +93,7 @@ Unfortunately, there are a few "gotchas" when using this gem.
 1. Using a thread pool would be nice.
 2. Benchmarks comparing MRI 2.1.2 vs. Rubinisu 2.2.6.
 3. Benchmarks comparing of this gem vs. Celluloid
+5. Add a way of using actors over a network via RPC
 
 ## Contributing
 
