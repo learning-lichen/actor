@@ -2,7 +2,8 @@
 
 [![Build Status](https://travis-ci.org/maxgale/actor.svg?branch=master)](https://travis-ci.org/maxgale/actor)
 
-The actor gem provides a completely implicit implementation of the actor pattern. The goal of the library is to provide an easy way to implement fast, concurrent code without having to worry about race conditions or unexpected side-effects.
+The actor gem provides a completely implicit implementation of the actor pattern. The goal of the library is to provide
+an easy way to implement fast, concurrent code without having to worry about race conditions or unexpected side-effects.
 
 ## Installation
 
@@ -34,7 +35,8 @@ Or install it yourself as:
 
     my_actor = MyActor.new
 
-That's it! Now any interations with `my_actor` will be executed concurrently. It's also worth noting that there are no real method invocations and there are no return values. Instead, code is executed via message passing. Instead of return values, there are callbacks.
+That's it! Now any interations with `my_actor` will be executed concurrently. It's also worth noting that there are no
+return values. Instead, code is executed via message passing. Instead, there are callbacks.
 
 ### Callbacks
 
@@ -57,7 +59,7 @@ That's it! Now any interations with `my_actor` will be executed concurrently. It
 
 ### Timers
 
-Another useful feature is the timer. The timer is an object that periodically executes from code.
+Another useful feature is the timer. The timer is an object that periodically executes a block of code.
 
     require 'actor/timer'
 
@@ -69,7 +71,8 @@ Another useful feature is the timer. The timer is an object that periodically ex
     => hi
     => hi
 
-Passing in `0` as the number of iterations to the timer causes it to execute indefinitely. You can also pause, resume, and wait for timers to finish execution.
+Passing in `0` as the number of iterations to the timer causes it to execute indefinitely. You can also pause, resume,
+and wait for timers to finish execution.
 
     my_timer = Timer.new 0.033, 0 do
       # Do periodic work
@@ -85,10 +88,15 @@ Passing in `0` as the number of iterations to the timer causes it to execute ind
 
 Unfortunately, there are a few "gotchas" when using this gem.
 
-1. `Actor::Base` overrides the including class's `:new` method and renames it to `:__actor_new`. This sets up the possibility of naming conflicts.
-2. When creating a new actor, the actual instance is wrapped in a proxy class.  This proxy forwards all methods to the instance to be executed in a concurrent way. This means it is impossible to execute code non-concurrently when handling the proxy. You can access the underlying instance by calling `__proxy_target`  on the proxy. Note: No callbacks when accessing the instance directly (unless you use send).
-3. The actor has an overriden send method. This means that using `:send` will always execute code concurrently, no matter what, and will also trigger callbacks.
-4. The timer period is counted from the end of the last block to the start of the next block. This means that the timer firing is very approximate and definitely not designed for blocking code.
+1. `Actor::Base` overrides the including class's `:new` method and renames it to `:__actor_new`. This sets up the
+possibility of naming conflicts.
+1. `Actor::Base` overrides `:send`, making it impossible to use `:send` without concurrent execution and callbacks.
+1. All actors are wrapped in a proxy class.  This proxy forwards all methods to the
+instance to be executed in a concurrent way. This means it is impossible to execute code normally when handling the
+proxy. You can access the underlying instance by calling `:__proxy_target`  on the proxy. Note: No callbacks are not
+triggered when accessing the instance directly (unless you use send).
+1. The timer period is counted from the end of the last block to the start of the next block. This means that the timer
+firing is very approximate and definitely not designed for blocking code.
 
 ## Todo
 
