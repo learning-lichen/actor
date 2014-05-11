@@ -1,5 +1,7 @@
 # Actor
 
+[![Build Status](https://travis-ci.org/maxgale/actor.svg?branch=master)](https://travis-ci.org/maxgale/actor)
+
 The actor gem provides a completely implicit implementation of the actor pattern. The goal of the library is to provide an easy way to implement fast, concurrent code without having to worry about race conditions or unexpected side-effects.
 
 ## Installation
